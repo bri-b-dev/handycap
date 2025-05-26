@@ -82,3 +82,27 @@ Capacitor ist das neue Runtime-Layer von Ionic, funktioniert aber framework-agno
    – In Android Studio wählst du dein virtuelles Gerät oder verbindest ein reales, und klickst auf **Run** (oder **Build → Generate Signed Bundle / APK** für Release-Builds).
 
 Das Ergebnis ist eine vollwertige Android-App mit WebView, in der dein Vue-Frontend läuft. Capacitor bietet außerdem Plugins für Kamera, Filesystem, Geolocation etc., falls du später native APIs brauchst.
+
+### Sync
+
+Nach Anpassungen am Vue-Projekt die App synchen:
+
+`npx cap sync android`
+
+Release-Package erstellen:
+
+```zsh
+cd android
+./gradlew assembleRelease
+```
+
+Und das APK-File signieren:
+```zsh
+$ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort -V | tail -n1)/apksigner \
+  sign \
+  --ks /Users/brigittebohm/Workspace/golf/handicap-calculator/android/my-release-key.jks \
+  --ks-key-alias bri-b-dev \
+  --out android/app/build/outputs/apk/release/app-release-signed.apk \
+  android/app/build/outputs/apk/release/app-release-unsigned.apk
+```
+
