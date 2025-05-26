@@ -1,4 +1,4 @@
-package com.bribdev.handicapcalculator;
+package com.bribdev.scoredifferential;
 
 import com.getcapacitor.BridgeActivity;
 
