@@ -5,7 +5,7 @@ FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Install dependencies
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm ci
 
 # Copy source code
@@ -22,6 +22,9 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built assets from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+RUN chown -R nginx:nginx /usr/share/nginx/html \
+ && chmod -R 755       /usr/share/nginx/html
 
 # Copy custom nginx configuration to handle SPA routing
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
