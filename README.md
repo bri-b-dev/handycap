@@ -124,7 +124,7 @@ cd android
 ./gradlew assembleRelease
 cd ..
 
-$ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort -V | tail -n1)/apksigner \              ok 
+$ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort -V | tail -n1)/apksigner \
   sign \
   --ks /Users/brigittebohm/Workspace/golf/handicap-calculator/android/my-release-key.jks \
   --ks-key-alias bri-b-dev \
