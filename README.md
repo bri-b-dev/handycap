@@ -31,3 +31,54 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Android Project
+
+Capacitor ist das neue Runtime-Layer von Ionic, funktioniert aber framework-agnostisch und spielt super mit Vite/Vue zusammen.
+
+1. **Installiere Capacitor**
+
+   ```bash
+   npm install @capacitor/core @capacitor/cli --save
+   ```
+
+2. **Initialisiere dein Capacitor-Projekt**
+   Im Projekt-Root:
+
+   ```bash
+   npx cap init
+   ```
+
+   * **Name:** z. B. `HandicapCalculator`
+   * **App-ID:** z. B. `com.deinname.handicapcalculator`
+   * **Web-dir:** `dist` (Vite-Build-Output)
+
+3. **Baue dein Vue-Projekt**
+
+   ```bash
+   npm run build
+   ```
+
+4. **Platform Android hinzufügen**
+
+   ```bash
+   npx cap add android
+   ```
+
+5. **Assets synchronisieren**
+   Jedes Mal, wenn du neu baust:
+
+   ```bash
+   npm run build
+   npx cap copy
+   ```
+
+6. **Android Studio öffnen & APK erzeugen**
+
+   ```bash
+   npx cap open android
+   ```
+
+   – In Android Studio wählst du dein virtuelles Gerät oder verbindest ein reales, und klickst auf **Run** (oder **Build → Generate Signed Bundle / APK** für Release-Builds).
+
+Das Ergebnis ist eine vollwertige Android-App mit WebView, in der dein Vue-Frontend läuft. Capacitor bietet außerdem Plugins für Kamera, Filesystem, Geolocation etc., falls du später native APIs brauchst.
