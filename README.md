@@ -120,7 +120,10 @@ npx cap add android
 npm run build
 npx cap copy
 
-android/gradlew assembleRelease
+cd android
+./gradlew assembleRelease
+cd ..
+
 $ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort -V | tail -n1)/apksigner \              ok 
   sign \
   --ks /Users/brigittebohm/Workspace/golf/handicap-calculator/android/my-release-key.jks \
