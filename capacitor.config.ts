@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.bribdev.handicap',
-  appName: 'Handicap-Calculator',
+  appId: 'com.bribdev.handycap',
+  appName: 'Handycap',
   webDir: 'dist'
 };
 

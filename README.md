@@ -1,4 +1,4 @@
-# handicap-calculator
+# handycap
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -49,8 +49,8 @@ Capacitor ist das neue Runtime-Layer von Ionic, funktioniert aber framework-agno
    npx cap init
    ```
 
-   * **Name:** z. B. `HandicapCalculator`
-   * **App-ID:** z. B. `com.deinname.handicapcalculator`
+   * **Name:** z. B. `HandyCap`
+   * **App-ID:** z. B. `com.deinname.handycap`
    * **Web-dir:** `dist` (Vite-Build-Output)
 
 3. **Baue dein Vue-Projekt**

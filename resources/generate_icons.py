@@ -4,7 +4,7 @@ import zipfile
 
 # Eingabe
 ICON_PATH = "icon.png"
-APP_NAME = "Handicap Calculator"
+#APP_NAME = "Handycap"
 SPLASH_BG_COLOR = (47, 47, 58)  # Grau
 OUTPUT_ZIP = "android_app_assets.zip"
 
@@ -62,11 +62,11 @@ def generate_splashscreens(icon):
         except:
             font = ImageFont.load_default()
 
-        bbox = draw.textbbox((0, 0), APP_NAME, font=font)
-        text_w = bbox[2] - bbox[0]
-        text_h = bbox[3] - bbox[1]
+        # bbox = draw.textbbox((0, 0), APP_NAME, font=font)
+        # text_w = bbox[2] - bbox[0]
+        # text_h = bbox[3] - bbox[1]
 
-        draw.text(((w - text_w) / 2, icon_y + icon_resized.height + 20), APP_NAME, fill="white", font=font)
+        # draw.text(((w - text_w) / 2, icon_y + icon_resized.height + 20), APP_NAME, fill="white", font=font)
         splash.save(f"{base_path}/{folder}/splash.png")
 
 def write_xmls():

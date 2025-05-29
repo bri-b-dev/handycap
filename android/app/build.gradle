@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.bribdev.handicap"
+    namespace "com.bribdev.handycap"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.bribdev.handicap"
+        applicationId "com.bribdev.handycap"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

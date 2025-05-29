@@ -1,4 +1,4 @@
-package com.bribdev.handicap;
+package com.bribdev.handycap;
 
 import com.getcapacitor.BridgeActivity;
 
