@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">ScoreDifferential-Calculator</string>
-    <string name="title_activity_main">ScoreDifferential-Calculator</string>
-    <string name="package_name">com.bribdev.scoredifferential</string>
-    <string name="custom_url_scheme">com.bribdev.scoredifferential</string>
+    <string name="app_name">Handicap-Calculator</string>
+    <string name="title_activity_main">Handicap-Calculator</string>
+    <string name="package_name">com.bribdev.handicap</string>
+    <string name="custom_url_scheme">com.bribdev.handicap</string>
 </resources>

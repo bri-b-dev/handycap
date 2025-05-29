@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.bribdev.scoredifferential"
+    namespace "com.bribdev.handicap"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.bribdev.scoredifferential"
+        applicationId "com.bribdev.handicap"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

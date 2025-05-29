@@ -4,7 +4,7 @@ import zipfile
 
 # Eingabe
 ICON_PATH = "icon.png"
-APP_NAME = "Score Differential Calculator"
+APP_NAME = "Handicap Calculator"
 SPLASH_BG_COLOR = (47, 47, 58)  # Grau
 OUTPUT_ZIP = "android_app_assets.zip"
 

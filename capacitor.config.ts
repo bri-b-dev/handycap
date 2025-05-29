@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.bribdev.scoredifferential',
-  appName: 'ScoreDifferential-Calculator',
+  appId: 'com.bribdev.handicap',
+  appName: 'Handicap-Calculator',
   webDir: 'dist'
 };
 
