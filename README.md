@@ -104,7 +104,7 @@ Und das APK-File signieren:
 ```zsh
 $ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort -V | tail -n1)/apksigner \
   sign \
-  --ks /Users/brigittebohm/Workspace/golf/handicap-calculator/android/my-release-key.jks \
+  --ks /Users/brigittebohm/Workspace/golf/handycap/android/my-release-key.jks \
   --ks-key-alias bri-b-dev \
   --out android/app/build/outputs/apk/release/app-release-signed.apk \
   android/app/build/outputs/apk/release/app-release-unsigned.apk
@@ -126,7 +126,7 @@ cd ..
 
 $ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort -V | tail -n1)/apksigner \
   sign \
-  --ks /Users/brigittebohm/Workspace/golf/handicap-calculator/android/my-release-key.jks \
+  --ks /Users/brigittebohm/Workspace/golf/handycap/android/my-release-key.jks \
   --ks-key-alias bri-b-dev \
   --out android/app/build/outputs/apk/release/app-release-signed.apk \
   android/app/build/outputs/apk/release/app-release-unsigned.apk
