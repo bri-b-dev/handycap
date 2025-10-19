@@ -1,0 +1,128 @@
+name: release-android
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: "24"
+      JAVA_VERSION: "21"
+      WORKING_DIRECTORY: "."
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      - name: Build web (Vue)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run build
+
+      - name: Install Capacitor CLI
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm i -D @capacitor/cli
+
+      - name: Sync Capacitor → Android
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
+
+      # ⬇️ Keystore aus Base64 herstellen + ENV für Gradle setzen
+      - name: Prepare keystore for Gradle signing
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+          echo "ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/android/app/upload-keystore.jks" >> $GITHUB_ENV
+          echo "ANDROID_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Build signed AAB & APK (Gradle)
+        working-directory: android
+        run: |
+          ./gradlew clean \
+            :app:bundleRelease \
+            :app:assembleRelease
+
+      - name: Show build outputs (diagnostics)
+        run: |
+          echo "=== Built files ==="
+          find android/app/build/outputs -type f \( -name "*.aab" -o -name "*.apk" \) -print || true
+
+      # Optional: normalisierte Dateinamen
+      - name: Collect artifacts
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          # AAB
+          AAB=$(ls android/app/build/outputs/bundle/release/*.aab | head -n1)
+          cp -f "$AAB" release/app-release.aab
+          # APK
+          APK=$(ls android/app/build/outputs/apk/release/*.apk | head -n1)
+          cp -f "$APK" release/app-release.apk
+          ls -l release
+
+      - name: Upload artifacts (AAB + APK)
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release
+          path: |
+            release/app-release.aab
+            release/app-release.apk
+          if-no-files-found: error
+
+  github-release:
+    needs: build-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android-release
+          path: dist
+
+      - name: Release notes
+        run: |
+          printf "## Änderungen\n\n- Automatisches Release für %s\n" "$GITHUB_REF_NAME" > RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: RELEASE_NOTES.md
+          files: |
+            dist/app-release.aab
+            dist/app-release.apk
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}
