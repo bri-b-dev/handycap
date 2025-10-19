@@ -56,16 +56,40 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses
 
-      # ⬇️ Keystore aus Base64 herstellen + ENV für Gradle setzen
-      - name: Prepare keystore for Gradle signing
+      # VOR dem Gradle-Build einfügen (und deinen "Prepare keystore..." Step löschen)
+      - name: Preflight signing secrets
+        shell: bash
+        env:
+          S_B64:   ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          S_SP:    ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          S_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          S_KP:    ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for v in S_B64 S_SP S_ALIAS S_KP; do
+            if [ -z "${!v:-}" ]; then
+              echo "❌ Missing required secret: $v"
+              exit 1
+            fi
+          done
+          # in die Build-Env exportieren (Gradle liest diese)
+          {
+            echo "ANDROID_KEYSTORE_BASE64=${S_B64}"
+            echo "ANDROID_KEYSTORE_PASSWORD=${S_SP}"
+            echo "ANDROID_KEY_ALIAS=${S_ALIAS}"
+            echo "ANDROID_KEY_PASSWORD=${S_KP}"
+          } >> "$GITHUB_ENV"
+          echo "ANDROID_KEYSTORE_BASE64 length: ${#S_B64}"
+
+      # Optional: sanity-check, dass der Keystore decodierbar ist und der Alias existiert
+      - name: Verify keystore decodes & alias exists
         shell: bash
         run: |
           set -euo pipefail
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
-          echo "ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/android/app/upload-keystore.jks" >> $GITHUB_ENV
-          echo "ANDROID_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
-          echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
-          echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+          tmp=keystore.jks
+          printf %s "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$tmp"
+          keytool -list -keystore "$tmp" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS" >/dev/null
+          rm -f "$tmp"
 
       - name: Build signed AAB & APK (Gradle)
         working-directory: android
