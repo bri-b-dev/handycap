@@ -56,28 +56,6 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses
 
-      - name: Export signing env
-        shell: bash
-        run: |
-          # harte Abbrüche, wenn ein Secret fehlt (vermeidet NPE)
-          set -euo pipefail
-          [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ] || (echo "Missing ANDROID_KEYSTORE_BASE64" && exit 1)
-          [ -n "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" ] || (echo "Missing ANDROID_KEYSTORE_PASSWORD" && exit 1)
-          [ -n "${{ secrets.ANDROID_KEY_ALIAS }}" ] || (echo "Missing ANDROID_KEY_ALIAS" && exit 1)
-          [ -n "${{ secrets.ANDROID_KEY_PASSWORD }}" ] || (echo "Missing ANDROID_KEY_PASSWORD" && exit 1)
-          
-          echo "ANDROID_KEYSTORE_BASE64=${{ secrets.ANDROID_KEYSTORE_BASE64 }}" >> $GITHUB_ENV
-          echo "ANDROID_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
-          echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
-          echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
-          
-          # Diagnose: Länge des Base64 (kein Inhalt wird geloggt)
-          echo "B64_LEN=$(printf %s "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | wc -c)" >> $GITHUB_ENV
-
-      - name: Echo base64 length (sanity)
-        run: |
-          echo "ANDROID_KEYSTORE_BASE64 length: $B64_LEN"
-
       # ⬇️ Keystore aus Base64 herstellen + ENV für Gradle setzen
       - name: Prepare keystore for Gradle signing
         shell: bash
