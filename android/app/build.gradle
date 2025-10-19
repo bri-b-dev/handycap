@@ -18,37 +18,46 @@ android {
     }
     signingConfigs {
       release {
-      def propOrEnv = { k -> System.getenv(k) ?: (project.hasProperty(k) ? project.property(k) : null) }
+        def getVar = { k -> System.getenv(k) ?: (project.hasProperty(k) ? project.property(k) : null) }
 
-      // 1) Base64 zuerst versuchen
-      def ksBase64 = propOrEnv("ANDROID_KEYSTORE_BASE64")
-      File resolvedKsFile = null
-      if (ksBase64) {
-        // Whitespace entfernen (falls mit Umbrüchen gespeichert) und ins buildDir schreiben
-        def cleanB64 = ksBase64.replaceAll("\\s", "")
-        def outDir = new File("${project.buildDir}/keystore")
-        outDir.mkdirs()
-        def outFile = new File(outDir, "upload-keystore.jks")
-        outFile.bytes = cleanB64.decodeBase64()
-        resolvedKsFile = outFile
-        println "🔐 Keystore aus ANDROID_KEYSTORE_BASE64 nach ${outFile} geschrieben"
-      } else {
-        // 2) Fallback: Pfad aus Env/Property oder lokaler Default
-        def ksPath = propOrEnv("ANDROID_KEYSTORE_PATH") ?: "upload-keystore.jks"
-        resolvedKsFile = file(ksPath)
-        println "🔐 Keystore per Pfad: ${resolvedKsFile}"
-      }
+        // Base64 bevorzugt; sonst Pfad-Fallback
+        def ksBase64 = getVar("ANDROID_KEYSTORE_BASE64")
+        File ksFile = null
+        if (ksBase64) {
+          def cleanB64 = ksBase64.replaceAll("\\s", "")
+          def outDir = new File("${project.buildDir}/keystore"); outDir.mkdirs()
+          def outFile = new File(outDir, "upload-keystore.jks")
+          try {
+            outFile.bytes = cleanB64.decodeBase64()
+          } catch (Throwable t) {
+            throw new GradleException("Keystore Base64 ist ungültig (Decode fehlgeschlagen).", t)
+          }
+          ksFile = outFile
+          println "🔐 Keystore aus ANDROID_KEYSTORE_BASE64 nach ${outFile} geschrieben"
+        } else {
+          def ksPath = getVar("ANDROID_KEYSTORE_PATH") ?: "upload-keystore.jks"
+          ksFile = file(ksPath)
+          println "🔐 Keystore per Pfad: ${ksFile}"
+        }
 
-      if (resolvedKsFile?.exists()) {
-        storeFile resolvedKsFile
-        storePassword propOrEnv("ANDROID_KEYSTORE_PASSWORD")
-        keyAlias      propOrEnv("ANDROID_KEY_ALIAS")
-        keyPassword   propOrEnv("ANDROID_KEY_PASSWORD")
-      } else {
-        println "⚠️  Kein Keystore gefunden – Release wird UNSIGNED gebaut."
-      }
+        if (!ksFile?.exists()) {
+          throw new GradleException("Keystore-Datei existiert nicht. Prüfe ANDROID_KEYSTORE_BASE64 oder ANDROID_KEYSTORE_PATH.")
+        }
+
+        def sp = getVar("ANDROID_KEYSTORE_PASSWORD")
+        def ka = getVar("ANDROID_KEY_ALIAS")
+        def kp = getVar("ANDROID_KEY_PASSWORD")
+        if (!sp || !ka || !kp) {
+          throw new GradleException("Signing-Variablen fehlen: ANDROID_KEYSTORE_PASSWORD / ANDROID_KEY_ALIAS / ANDROID_KEY_PASSWORD")
+        }
+
+        storeFile ksFile
+        storePassword sp
+        keyAlias      ka
+        keyPassword   kp
       }
     }
+
     buildTypes {
       release {
         signingConfig signingConfigs.release
@@ -57,6 +66,7 @@ android {
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
       }
     }
+
 }
 
 repositories {
