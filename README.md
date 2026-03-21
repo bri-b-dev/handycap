@@ -11,10 +11,6 @@
 
 A mobile‑first web app built with Vue 3 + Vite and Capacitor. It uses IndexedDB (via Dexie) for offline data and Chart.js for visualizations. The project can be deployed as a static site (dist) or packaged as a native Android app via Capacitor.
 
-> Note: This README documents the current repository structure and scripts. Update badges/links (e.g., CI, License) to match your repository after publishing.
-
-## Table of contents
-* [Table of contents](#table-of-contents)
 * [About](#about)
 * [Features](#features)
 * [Tech stack](#tech-stack)
@@ -35,10 +31,11 @@ Handycap is a Vue 3 + Capacitor application. It is designed to run in the browse
 
 ## Features
 - Modern Vue 3 single‑page app using Vite for fast dev/build
-- Type‑safe codebase with TypeScript
+- Fully strict Type‑safe codebase with TypeScript
+- Premium modern UI with glassmorphism, responsive animations, and 'Inter' typography
 - Offline‑first local storage with Dexie (IndexedDB)
 - Charts and time‑series via Chart.js and date‑fns adapter
-- Internationalization via vue‑i18n
+- Internationalization via vue‑i18n (English & German)
 - Android packaging with Capacitor
 - Dockerfile for static hosting with NGINX
 
@@ -90,7 +87,8 @@ Verify versions:
 - NGINX config for static hosting: nginx.conf
 
 Environment variables
-- This project does not require app runtime .env by default. If you add environment variables, prefer Vite's VITE_ prefix and document them here.
+- `VITE_APP_VERSION`: Used to dynamically inject the app version into the "About" page (e.g. `VITE_APP_VERSION=1.1.0`). Note that Vite evaluates this **at build time**, so any changes to this variable require a fresh `npm run build` and `npx cap sync android` to propagate into the Android APK.
+- If you add more custom environment variables, prefix them with `VITE_` and document them here.
 
 Android signing
 - An example helper script exists at setup-android-release.sh which exports signing‑related environment variables. Adjust paths and secrets to your environment; do not commit actual secrets.
