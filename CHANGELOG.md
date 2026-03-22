@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [1.2.3] - 2026-03-22
+
+### Fixed
+
+- Import placeholder `{n}` was shown literally on Android — replaced vue-i18n message interpolation with plain JS string concatenation to avoid Android WebView CSP blocking `new Function()` at runtime
+
 ## [1.2.2] - 2026-03-22
 
 ### Fixed

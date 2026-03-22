@@ -129,6 +129,9 @@ jobs:
     needs: build-release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -137,7 +140,15 @@ jobs:
 
       - name: Release notes
         run: |
-          printf "## Änderungen\n\n- Automatisches Release für %s\n" "$GITHUB_REF_NAME" > RELEASE_NOTES.md
+          # Extract the section for this tag (e.g. v1.2.2 → [1.2.2]) from CHANGELOG.md.
+          # Prints everything between the matching "## [x.y.z]" heading and the next "## " heading.
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk "/^## \[${VERSION}\]/{found=1; next} found && /^## /{exit} found{print}" CHANGELOG.md \
+            | sed '/^[[:space:]]*$/d' > RELEASE_NOTES.md
+          # Fall back to a generic message if the version wasn't found in the changelog.
+          if [ ! -s RELEASE_NOTES.md ]; then
+            printf "Release %s\n" "$GITHUB_REF_NAME" > RELEASE_NOTES.md
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
