@@ -9,7 +9,10 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // Force the full vue-i18n build (includes message compiler) instead of
+      // the runtime-only build, so {n} placeholders work in production/Android.
+      'vue-i18n': 'vue-i18n/dist/vue-i18n.esm-bundler.js'
     },
   },
 })
