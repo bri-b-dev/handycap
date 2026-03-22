@@ -25,7 +25,7 @@ android {
         File ksFile = null
         if (ksBase64) {
           def cleanB64 = ksBase64.replaceAll("\\s", "")
-          def outDir = new File("${project.buildDir}/keystore"); outDir.mkdirs()
+          def outDir = new File(projectDir, "keystore"); outDir.mkdirs()
           def outFile = new File(outDir, "upload-keystore.jks")
           try {
             outFile.bytes = cleanB64.decodeBase64()
