@@ -38,7 +38,7 @@ HandyCap is a Vue 3 + Capacitor application for tracking your golf handicap inde
 - Offline‑first local storage with Dexie (IndexedDB)
 - Handicap calculator view for computing Score Differentials and HCPI
 - History view with handicap statistics (last HCPI, round count, lowest HI over 12 months, average of best 5 differentials) and a Chart.js time‑series chart
-- **PDF import (v1.1)**: import rounds directly from a DGV *Scoring Record (Detailliert)* PDF using pdfjs‑dist — no manual data entry required
+- **PDF import (v1.1)**: import rounds directly from a DGV *Scoring Record (Detailliert)* PDF using pdfjs‑dist - no manual data entry required
 - Internationalization via vue‑i18n (English & German)
 - Material Design Icons for UI icons
 - Android packaging with Capacitor
@@ -155,20 +155,20 @@ Then open http://localhost:8080
 
 ## Project scripts
 From package.json:
-- npm run dev — start Vite dev server
-- npm run build — type‑check then build
-- npm run build-only — build without type checking
-- npm run type-check — run vue-tsc in build mode
-- npm run preview — preview built app locally
+- npm run dev - start Vite dev server
+- npm run build - type‑check then build
+- npm run build-only - build without type checking
+- npm run type-check - run vue-tsc in build mode
+- npm run preview - preview built app locally
 
 ## PDF import
 The History view includes a "Import PDF" button that parses a DGV **Scoring Record (Detailliert)** PDF and loads all rounds into the local database automatically.
 
 Requirements:
-- Use the **Scoring Record (Detailliert)** export from your club's DGV handicap portal — **not** the Handicap History Sheet. The Scoring Record contains the official SD values already computed by the handicap server.
+- Use the **Scoring Record (Detailliert)** export from your club's DGV handicap portal - **not** the Handicap History Sheet. The Scoring Record contains the official SD values already computed by the handicap server.
 - The parser extracts: date, course name (club + tournament), number of holes, CR, Slope, HCPI at time of round, Adjusted Gross Score (GBE), and Score Differential (SD).
 - SD values are taken directly from the PDF and are not recalculated.
-- Duplicate detection is handled by the local database — re‑importing the same PDF is safe.
+- Duplicate detection is handled by the local database - re‑importing the same PDF is safe.
 
 ## Troubleshooting
 - After upgrading dependencies, delete node_modules and package-lock.json, then reinstall:

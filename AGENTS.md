@@ -1,4 +1,4 @@
-# AGENTS.md — HandyCap
+# AGENTS.md - HandyCap
 
 Guidelines for AI agents working in this repository.
 
@@ -26,7 +26,7 @@ src/
     de.ts              # German translations (incl. HTML content for FAQs)
     en.ts              # English translations
   router/
-    index.ts           # Vue Router v4 — 4 routes (see below)
+    index.ts           # Vue Router v4 - 4 routes (see below)
   utils/
     calculations.ts    # Core WHS handicap calculation logic
     pdfParser.ts       # In-browser DGV Scoring Record PDF parser (pdfjs-dist)
@@ -39,7 +39,7 @@ src/
   db.ts                # Dexie schema (Result, Setting tables)
   main.ts              # App entry point (Vue 3 + vue-i18n initialisation)
 android/               # Capacitor-managed Android project (do not edit manually)
-.github/workflows/     # build-release.yaml.yml — tag-triggered Android CI/CD
+.github/workflows/     # build-release.yaml.yml - tag-triggered Android CI/CD
 Dockerfile             # Multi-stage: Node 24 build → nginx:stable-alpine serve
 nginx.conf             # SPA fallback routing for NGINX
 capacitor.config.ts    # appId: com.bribdev.HandyCap | webDir: dist
@@ -63,13 +63,13 @@ vite.config.ts         # @vitejs/plugin-vue, alias @ → src/
 
 Dexie v4, IndexedDB. Two tables:
 
-**results** — one row per golf round
+**results** - one row per golf round
 `id` (auto) | `date` (ISO string) | `courseName` | `grossScore` | `scoreDifferential` | `storedHandicap`
 
-**settings** — key/value store
+**settings** - key/value store
 `id` (auto) | `key` (unique string, e.g. `"locale"`) | `value`
 
-Schema is versioned (v1 → v2). Add new versions with `db.version(n).stores(...)` — never modify existing version definitions.
+Schema is versioned (v1 → v2). Add new versions with `db.version(n).stores(...)` - never modify existing version definitions.
 
 ---
 
@@ -113,10 +113,10 @@ Implements WHS Soft/Hard Cap using the lowest `storedHandicap` in the past 365 d
 ## PDF import (src/utils/pdfParser.ts)
 
 Parses a **DGV Scoring Record (Detailliert)** PDF (not the Handicap History Sheet).
-Uses `pdfjs-dist` for in-browser text extraction — no server call, no file upload.
+Uses `pdfjs-dist` for in-browser text extraction - no server call, no file upload.
 
 Extracted per round: `date`, `courseName` (club + tournament), `holes` (9/18), `cr`, `slope`, `hcpi`, `gbe`, `sd`
-SD is taken directly from the PDF value — it is **not** recalculated.
+SD is taken directly from the PDF value - it is **not** recalculated.
 
 Entry point: `parsePdf(file: File): Promise<ImportedRound[]>`
 
@@ -189,11 +189,11 @@ Signing secrets required (stored in GitHub repository secrets):
 
 ## Conventions & constraints
 
-- **TypeScript strict mode** — avoid `any`; use proper interfaces.
-- **No backend** — all persistence goes through Dexie (`src/db.ts`). Never introduce a network call for data storage.
-- **pdfjs worker** — the worker is resolved via `import.meta.url` in `pdfParser.ts`. Do not change this pattern; it is required for Vite's asset bundling.
-- **i18n keys** — always add translations to both `de.ts` and `en.ts` in the same commit.
-- **Dexie schema versions** — only append new `db.version(n)` blocks; never mutate existing ones.
-- **android/ directory** — managed by Capacitor CLI. Do not hand-edit files inside it; run `npx cap sync android` after web changes.
-- **Environment variable** — `VITE_APP_VERSION` is injected at build time for the About page. Update it when bumping the version.
-- **Secrets** — never commit keystore files, `.env` with real secrets, or `android/local.properties`.
+- **TypeScript strict mode** - avoid `any`; use proper interfaces.
+- **No backend** - all persistence goes through Dexie (`src/db.ts`). Never introduce a network call for data storage.
+- **pdfjs worker** - the worker is resolved via `import.meta.url` in `pdfParser.ts`. Do not change this pattern; it is required for Vite's asset bundling.
+- **i18n keys** - always add translations to both `de.ts` and `en.ts` in the same commit.
+- **Dexie schema versions** - only append new `db.version(n)` blocks; never mutate existing ones.
+- **android/ directory** - managed by Capacitor CLI. Do not hand-edit files inside it; run `npx cap sync android` after web changes.
+- **Environment variable** - `VITE_APP_VERSION` is injected at build time for the About page. Update it when bumping the version.
+- **Secrets** - never commit keystore files, `.env` with real secrets, or `android/local.properties`.
