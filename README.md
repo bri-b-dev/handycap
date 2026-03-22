@@ -1,6 +1,6 @@
-# Handycap
+# HandyCap
 
-[![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](#)
+[![Version](https://img.shields.io/badge/version-1.1.0-informational.svg)](#)
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Bundler-Vite-646cff?logo=vite)](https://vitejs.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org/)
@@ -9,33 +9,38 @@
 [![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue?logo=githubactions)](#)
 [![License](https://img.shields.io/badge/license-Apache_2.0-lightgrey.svg)](./LICENSE)
 
-A mobile‑first web app built with Vue 3 + Vite and Capacitor. It uses IndexedDB (via Dexie) for offline data and Chart.js for visualizations. The project can be deployed as a static site (dist) or packaged as a native Android app via Capacitor.
+A mobile‑first golf handicap tracker built with Vue 3 + Vite and Capacitor. It uses IndexedDB (via Dexie) for offline data, Chart.js for visualizations, and pdfjs‑dist for importing rounds directly from DGV Scoring Record PDFs. The project can be deployed as a static site (dist) or packaged as a native Android app via Capacitor.
 
-* [About](#about)
-* [Features](#features)
-* [Tech stack](#tech-stack)
-* [Prerequisites](#prerequisites)
-* [Getting started](#getting-started)
-* [Configuration](#configuration)
-* [Development](#development)
-* [Build & production](#build--production)
-* [Android build & release](#android-build--release)
-* [Docker usage](#docker-usage)
-* [Project scripts](#project-scripts)
-* [Troubleshooting](#troubleshooting)
-* [Contributing](#contributing)
-* [License](#license)
+- [HandyCap](#handycap)
+  - [About](#about)
+  - [Features](#features)
+  - [Tech stack](#tech-stack)
+  - [Prerequisites](#prerequisites)
+  - [Getting started](#getting-started)
+  - [Configuration](#configuration)
+  - [Development](#development)
+  - [Build \& production](#build--production)
+  - [Android build \& release](#android-build--release)
+  - [Docker usage](#docker-usage)
+  - [Project scripts](#project-scripts)
+  - [PDF import](#pdf-import)
+  - [Troubleshooting](#troubleshooting)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## About
-Handycap is a Vue 3 + Capacitor application. It is designed to run in the browser as a PWA and can be compiled to a native Android application. The app leverages IndexedDB for persistent offline storage and provides charts for insights.
+HandyCap is a Vue 3 + Capacitor application for tracking your golf handicap index (HCPI) according to the World Handicap System (WHS) / DGV rules. It is designed to run in the browser as a PWA and can be compiled to a native Android application. The app leverages IndexedDB for persistent offline storage and provides charts for insights.
 
 ## Features
 - Modern Vue 3 single‑page app using Vite for fast dev/build
 - Fully strict Type‑safe codebase with TypeScript
 - Premium modern UI with glassmorphism, responsive animations, and 'Inter' typography
 - Offline‑first local storage with Dexie (IndexedDB)
-- Charts and time‑series via Chart.js and date‑fns adapter
+- Handicap calculator view for computing Score Differentials and HCPI
+- History view with handicap statistics (last HCPI, round count, lowest HI over 12 months, average of best 5 differentials) and a Chart.js time‑series chart
+- **PDF import (v1.1)**: import rounds directly from a DGV *Scoring Record (Detailliert)* PDF using pdfjs‑dist — no manual data entry required
 - Internationalization via vue‑i18n (English & German)
+- Material Design Icons for UI icons
 - Android packaging with Capacitor
 - Dockerfile for static hosting with NGINX
 
@@ -45,6 +50,8 @@ Handycap is a Vue 3 + Capacitor application. It is designed to run in the browse
 - Language: TypeScript
 - Offline storage: Dexie (IndexedDB)
 - Charts: Chart.js + chartjs‑adapter‑date‑fns
+- PDF parsing: pdfjs‑dist
+- Icons: material‑design‑icons‑iconfont
 - Mobile: Capacitor (Android platform included)
 
 ## Prerequisites
@@ -81,7 +88,7 @@ Verify versions:
 - TypeScript config: tsconfig.json and tsconfig.app.json
 - Capacitor config: capacitor.config.ts
   - appId: com.bribdev.handycap
-  - appName: Handycap
+  - appName: HandyCap
   - webDir: dist
 - Android project: android/ directory (generated/managed by Capacitor)
 - NGINX config for static hosting: nginx.conf
@@ -153,6 +160,15 @@ From package.json:
 - npm run build-only — build without type checking
 - npm run type-check — run vue-tsc in build mode
 - npm run preview — preview built app locally
+
+## PDF import
+The History view includes a "Import PDF" button that parses a DGV **Scoring Record (Detailliert)** PDF and loads all rounds into the local database automatically.
+
+Requirements:
+- Use the **Scoring Record (Detailliert)** export from your club's DGV handicap portal — **not** the Handicap History Sheet. The Scoring Record contains the official SD values already computed by the handicap server.
+- The parser extracts: date, course name (club + tournament), number of holes, CR, Slope, HCPI at time of round, Adjusted Gross Score (GBE), and Score Differential (SD).
+- SD values are taken directly from the PDF and are not recalculated.
+- Duplicate detection is handled by the local database — re‑importing the same PDF is safe.
 
 ## Troubleshooting
 - After upgrading dependencies, delete node_modules and package-lock.json, then reinstall:
