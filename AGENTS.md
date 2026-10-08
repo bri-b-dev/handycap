@@ -79,17 +79,15 @@ Schema is versioned (v1 → v2). Add new versions with `db.version(n).stores(...
 ```
 SD = (GBE − CR) × 113 / Slope ± PCC
 ```
-For 9-hole rounds the result is doubled before storing (converted to 18-hole equivalent).
+For 9-hole rounds the 18-hole equivalent is computed directly (expected score for the unplayed 9 holes: `(HI × 1.04 + 2.4) / 2`, PCC weighted 0.5), so every stored differential is already an 18-hole value. Imported rounds take SD from the PDF.
 
 ### computeBaseHandicap(diffs, prevHC)
 Selects the best N differentials from the most recent 20 rounds per WHS rules:
 
 | Rounds | Best N | Adjustment |
 |--------|--------|------------|
-| 1      | 1      | −2.0       |
-| 2      | 1      | −1.0       |
-| 3      | 1      | 0.0        |
-| 4      | 1      | 0.0        |
+| 1–3    | 1      | −2.0       |
+| 4      | 1      | −1.0       |
 | 5      | 1      | 0.0        |
 | 6      | 2      | −1.0       |
 | 7–8    | 2      | 0.0        |
@@ -156,6 +154,7 @@ Translation keys include rich HTML strings (used in FAQ tooltips). When adding k
 npm install       # install deps
 npm run dev       # start Vite dev server at http://localhost:5173
 npm run type-check  # run vue-tsc
+npm run test      # run vitest
 npm run build     # type-check + production build → dist/
 npm run preview   # preview production build locally
 ```
