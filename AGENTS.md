@@ -5,7 +5,7 @@ Guidelines for AI agents working in this repository.
 ## Project overview
 
 **HandyCap** is a mobile-first golf handicap tracker (Vue 3 + Vite + TypeScript + Capacitor).
-Version: **1.1.0** | License: Apache 2.0
+Version: **1.3.x** | License: Apache 2.0
 
 The app runs as a PWA in any browser and can be compiled to a native Android APK/AAB via Capacitor.
 All data is stored locally in IndexedDB (Dexie). There is no backend or cloud sync.

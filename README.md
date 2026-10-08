@@ -1,6 +1,6 @@
 # HandyCap
 
-[![Version](https://img.shields.io/badge/version-1.1.0-informational.svg)](#)
+[![Version](https://img.shields.io/badge/version-1.3.2-informational.svg)](#)
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Bundler-Vite-646cff?logo=vite)](https://vitejs.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org/)
@@ -38,7 +38,7 @@ HandyCap is a Vue 3 + Capacitor application for tracking your golf handicap inde
 - Offline‑first local storage with Dexie (IndexedDB)
 - Handicap calculator view for computing Score Differentials and HCPI
 - History view with handicap statistics (last HCPI, round count, lowest HI over 12 months, average of best 5 differentials) and a Chart.js time‑series chart
-- **PDF import (v1.1)**: import rounds directly from a DGV *Scoring Record (Detailliert)* PDF using pdfjs‑dist - no manual data entry required
+- **PDF import**: import rounds directly from a DGV *Scoring Record (Detailliert)* PDF using pdfjs‑dist - no manual data entry required
 - Internationalization via vue‑i18n (English & German)
 - Material Design Icons for UI icons
 - Android packaging with Capacitor
